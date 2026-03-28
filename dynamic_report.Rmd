@@ -1,0 +1,107 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+```
+```{css}
+body {
+  font-family: Arial, sans-serif;
+  color: #333333;
+  line-height: 1.6;
+}
+
+h2 {
+  color: #4A90D9;
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 5px;
+}
+
+p {
+  font-size: 16px;
+}
+```
+
+## Social Media Habits: Two-Week Observation Log
+
+This report analyses social media usage patterns based on an observational log filled out over the past two weeks. It focuses on the time I spent on social media each day, which platforms were used the most, and what time of day usage was highest. This will provide insights into patterns within my social media habits, which will be helpful for monitoring trends over time.
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ9So8yNO6thzb2byI4_0SF_ihCIhu4XiGzAKQ670iBHZmzTTqscqXrvX7QRwHfC2aoSMnlZLZ8rrd/pub?output=csv"
+
+logged_data <- read_csv(csv_file)
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp                        = 1,
+    most_used_platform               = 2,
+    daily_minutes                    = 3,
+    most_consumed_media_type         = 4,
+    time_of_day_conusming_most_media = 5
+  )
+```
+
+## How much time was spent on social media each day?
+```{r}
+ggplot(data = latest_data, aes(x = daily_minutes)) +
+  geom_bar(fill = "#4A90D9") +
+  labs(
+    title = "Daily Social Media Usage",
+    subtitle = "Distribution of time spent on social media each day",
+    x = "Minutes",
+    y = "Number of Days",
+    caption = "Source: Personal observation log"
+  )
+```
+
+The minimum time spent on social media was `r min(latest_data$daily_minutes, na.rm = TRUE)` minutes, while the maximum was `r max(latest_data$daily_minutes, na.rm = TRUE)` minutes.
+
+The average (mean) time spent on social media was `r round(mean(latest_data$daily_minutes, na.rm = TRUE), digits = 1)` minutes per day.
+
+This suggests that social media usage varied across the two-week period. On some days very little time was spent on social media, while on others usage was much higher. This could be due to external factors such as university commitments, social events, or other activities.
+
+## What platform was used the most?
+```{r}
+ggplot(data = latest_data, aes(x = most_used_platform)) +
+  geom_bar(fill = "#E07B4A") +
+  labs(
+    title = "Most Used Social Media Platform",
+    subtitle = "Number of days each platform was used the most",
+    x = "Platform",
+    y = "Number of Days",
+    caption = "Source: Personal observation log"
+  )
+```
+
+This chart shows which social media platform was used most frequently across the two-week observation period.
+
+From the data, we can observe which platforms dominated daily social media habits. This helps identify whether usage was spread evenly across platforms or concentrated on one or two in particular.
+
+## When was social media used the most?
+```{r}
+ggplot(data = latest_data, aes(x = time_of_day_conusming_most_media)) +
+  geom_bar(fill = "#6DBF6D") +
+  labs(
+    title = "Time of Day When Most Media Was Consumed",
+    subtitle = "When during the day social media usage was highest",
+    x = "Time of Day",
+    y = "Number of Days",
+    caption = "Source: Personal observation log"
+  )
+```
+
+This graph shows the times of day when social media usage was highest across the two weeks.
+
+It helps identify patterns in daily behavior and when engagement with social media was most likely to occur. This suggests that I tend to consume social earlier on in the day or later on in the day.
+
+## Summary
+
+Over the `r nrow(latest_data)` days of logging, the data shows patterns in:
+
+- How much time was spent on social media each day
+- Which platforms were used the most
+- What time of day usage was highest
+
+Overall, this provides insight into my daily social media consumption habits and highlights trends in behavior across a two-week period.
