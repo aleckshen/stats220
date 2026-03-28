@@ -5,11 +5,9 @@ output: html_fragment
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
 
-suppressPackageStartupMessages(library(tidyverse))
+library(tidyverse)
 
-csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ9So8yNO6thzb2byI4_0SF_ihCIhu4XiGzAKQ670iBHZmzTTqscqXrvX7QRwHfC2aoSMnlZLZ8rrd/pub?output=csv"
-
-logged_data <- read_csv(csv_file)
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ9So8yNO6thzb2byI4_0SF_ihCIhu4XiGzAKQ670iBHZmzTTqscqXrvX7QRwHfC2aoSMnlZLZ8rrd/pub?output=csv")
 
 latest_data <- logged_data %>%
   rename(
@@ -20,6 +18,12 @@ latest_data <- logged_data %>%
     time_of_day_conusming_most_media = 5
   )
 
+daily_minutes <- latest_data$daily_minutes
+
+min_minutes <- min(daily_minutes, na.rm = TRUE)
+max_minutes <- max(daily_minutes, na.rm = TRUE)
+mean_minutes <- round(mean(daily_minutes, na.rm = TRUE), digits = 1)
+number_of_entries <- length(daily_minutes)
 ```
 ```{css}
 body {
@@ -28,7 +32,7 @@ body {
   line-height: 1.6;
 }
 
-h2 {
+h2, h3 {
   color: #4A90D9;
   border-bottom: 1px solid #cccccc;
   padding-bottom: 5px;
@@ -43,7 +47,9 @@ p {
 
 This report analyses social media usage patterns based on an observational log filled out over the past two weeks. It focuses on the time I spent on social media each day, which platforms were used the most, and what time of day usage was highest. This will provide insights into patterns within my social media habits, which will be helpful for monitoring trends over time.
 
-## How much time was spent on social media each day?
+---
+
+### How much time was spent on social media each day?
 ```{r}
 ggplot(data = latest_data, aes(x = daily_minutes)) +
   geom_bar(fill = "#4A90D9") +
@@ -56,13 +62,15 @@ ggplot(data = latest_data, aes(x = daily_minutes)) +
   )
 ```
 
-The minimum time spent on social media was `r min(latest_data$daily_minutes, na.rm = TRUE)` minutes, while the maximum was `r max(latest_data$daily_minutes, na.rm = TRUE)` minutes.
+The minimum time spent on social media was `r min_minutes` minutes, while the maximum was `r max_minutes` minutes.
 
-The average (mean) time spent on social media was `r round(mean(latest_data$daily_minutes, na.rm = TRUE), digits = 1)` minutes per day.
+The average (mean) time spent on social media was `r mean_minutes` minutes per day.
 
 This suggests that social media usage varied across the two-week period. On some days very little time was spent on social media, while on others usage was much higher. This could be due to external factors such as university commitments, social events, or other activities.
 
-## What platform was used the most?
+---
+
+### What platform was used the most?
 ```{r}
 ggplot(data = latest_data, aes(x = most_used_platform)) +
   geom_bar(fill = "#E07B4A") +
@@ -79,7 +87,9 @@ This chart shows which social media platform was used most frequently across the
 
 From the data, we can observe which platforms dominated daily social media habits. This helps identify whether usage was spread evenly across platforms or concentrated on one or two in particular.
 
-## When was social media used the most?
+---
+
+### When was social media used the most?
 ```{r}
 ggplot(data = latest_data, aes(x = time_of_day_conusming_most_media)) +
   geom_bar(fill = "#6DBF6D") +
@@ -94,14 +104,18 @@ ggplot(data = latest_data, aes(x = time_of_day_conusming_most_media)) +
 
 This graph shows the times of day when social media usage was highest across the two weeks.
 
-It helps identify patterns in daily behavior and when engagement with social media was most likely to occur. This suggests that I tend to consume social earlier on in the day or later on in the day.
+It helps identify patterns in daily behaviour and when engagement with social media was most likely to occur. This suggests that I tend to consume social media earlier or later in the day.
 
-## Summary
+However, I only have `r number_of_entries` entries in this observational log, which is too small of a sample size to come to any statistically significant conclusion.
 
-Over the `r nrow(latest_data)` days of logging, the data shows patterns in:
+---
+
+### Summary of findings
+
+The data shows patterns in:
 
 - How much time was spent on social media each day
 - Which platforms were used the most
 - What time of day usage was highest
 
-Overall, this provides insight into my daily social media consumption habits and highlights trends in behavior across a two-week period.
+Overall, this provides insight into my daily social media consumption habits and highlights trends in behaviour across a two-week period.
