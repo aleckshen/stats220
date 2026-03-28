@@ -4,6 +4,22 @@ output: html_fragment
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+suppressPackageStartupMessages(library(tidyverse))
+
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ9So8yNO6thzb2byI4_0SF_ihCIhu4XiGzAKQ670iBHZmzTTqscqXrvX7QRwHfC2aoSMnlZLZ8rrd/pub?output=csv"
+
+logged_data <- read_csv(csv_file)
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp                        = 1,
+    most_used_platform               = 2,
+    daily_minutes                    = 3,
+    most_consumed_media_type         = 4,
+    time_of_day_conusming_most_media = 5
+  )
+
 ```
 ```{css}
 body {
@@ -26,22 +42,6 @@ p {
 ## Social Media Habits: Two-Week Observation Log
 
 This report analyses social media usage patterns based on an observational log filled out over the past two weeks. It focuses on the time I spent on social media each day, which platforms were used the most, and what time of day usage was highest. This will provide insights into patterns within my social media habits, which will be helpful for monitoring trends over time.
-```{r}
-suppressPackageStartupMessages(library(tidyverse))
-
-csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ9So8yNO6thzb2byI4_0SF_ihCIhu4XiGzAKQ670iBHZmzTTqscqXrvX7QRwHfC2aoSMnlZLZ8rrd/pub?output=csv"
-
-logged_data <- read_csv(csv_file)
-
-latest_data <- logged_data %>%
-  rename(
-    timestamp                        = 1,
-    most_used_platform               = 2,
-    daily_minutes                    = 3,
-    most_consumed_media_type         = 4,
-    time_of_day_conusming_most_media = 5
-  )
-```
 
 ## How much time was spent on social media each day?
 ```{r}
